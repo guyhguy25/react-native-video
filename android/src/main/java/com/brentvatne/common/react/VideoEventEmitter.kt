@@ -68,7 +68,7 @@ class VideoEventEmitter {
         trackId: String?
     ) -> Unit
     lateinit var onVideoError: (errorString: String, exception: Exception, errorCode: String) -> Unit
-    lateinit var onVideoProgress: (currentPosition: Long, bufferedDuration: Long, seekableDuration: Long, currentPlaybackTime: Double) -> Unit
+    lateinit var onVideoProgress: (currentPosition: Long, bufferedDuration: Long, seekableDuration: Long, currentPlaybackTime: Double, currentOffsetFromLive: Float) -> Unit
     lateinit var onVideoBandwidthUpdate: (bitRateEstimate: Long, height: Int, width: Int, trackId: String?) -> Unit
     lateinit var onVideoPlaybackStateChanged: (isPlaying: Boolean, isSeeking: Boolean) -> Unit
     lateinit var onVideoSeek: (currentPosition: Long, seekTime: Long) -> Unit
@@ -144,12 +144,14 @@ class VideoEventEmitter {
                     )
                 }
             }
-            onVideoProgress = { currentPosition, bufferedDuration, seekableDuration, currentPlaybackTime ->
+            onVideoProgress = { currentPosition, bufferedDuration, seekableDuration, currentPlaybackTime, currentOffsetFromLive ->
                 event.dispatch(EventTypes.EVENT_PROGRESS) {
                     putDouble("currentTime", currentPosition / 1000.0)
                     putDouble("playableDuration", bufferedDuration / 1000.0)
                     putDouble("seekableDuration", seekableDuration / 1000.0)
                     putDouble("currentPlaybackTime", currentPlaybackTime)
+                    putDouble("currentOffsetFromLive", currentOffsetFromLive)
+                    putDouble("currentLiveTimestamp", currentPlaybackTime)
                 }
             }
             onVideoBandwidthUpdate = { bitRateEstimate, height, width, trackId ->

@@ -357,11 +357,13 @@ Example:
 
 Callback function that is called every progressUpdateInterval milliseconds with info about which position the media is currently playing.
 
-| Property         | Type   | Description                                                                                       |
-| ---------------- | ------ | ------------------------------------------------------------------------------------------------- |
-| currentTime      | number | Current position in seconds                                                                       |
-| playableDuration | number | Position to where the media can be played to using just the buffer in seconds                     |
-| seekableDuration | number | Position to where the media can be seeked to in seconds. Typically, the total length of the media |
+| Property              | Type   | Description                                                                                       |
+| --------------------- | ------ | ------------------------------------------------------------------------------------------------- |
+| currentTime           | number | Current position in seconds                                                                       |
+| playableDuration      | number | Position to where the media can be played to using just the buffer in seconds                     |
+| seekableDuration      | number | Position to where the media can be seeked to in seconds. Typically, the total length of the media |
+| currentOffsetFromLive | number | Float value indicating the latency of the live stream in seconds                                  |
+| currentLiveTimestamp  | number | The exact timestamp from the latest #EXT-X-PROGRAM-DATE-TIME in the HLS playlist                  |
 
 Example:
 
@@ -369,7 +371,9 @@ Example:
 {
   currentTime: 5.2,
   playableDuration: 34.6,
-  seekableDuration: 888
+  seekableDuration: 888,
+  currentOffsetFromLive: 882.8
+  currentLiveTimestamp: 1708171200000
 }
 ```
 

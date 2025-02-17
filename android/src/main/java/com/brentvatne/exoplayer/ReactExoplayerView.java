@@ -275,6 +275,14 @@ public class ReactExoplayerView extends FrameLayout implements
         this.cmcdConfigurationFactory = factory;
     }
 
+    private Float getCurrentOffsetFromLive() {
+        if (player.getCurrentLiveOffset() == C.TIME_UNSET) {
+            return null;
+        } else {
+            return player.getCurrentLiveOffset() / 1000f;
+        }
+    }
+
     private void updateProgress() {
         if (player != null) {
             if (playerControlView != null && isPlayingAd() && controls) {
@@ -287,13 +295,21 @@ public class ReactExoplayerView extends FrameLayout implements
                 pos = duration;
             }
 
+            Float currentOffsetFromLive = getCurrentOffsetFromLive();
+
             if (lastPos != pos
                     || lastBufferDuration != bufferedDuration
                     || lastDuration != duration) {
                 lastPos = pos;
                 lastBufferDuration = bufferedDuration;
                 lastDuration = duration;
-                eventEmitter.onVideoProgress.invoke(pos, bufferedDuration, player.getDuration(), getPositionInFirstPeriodMsForCurrentWindow(pos));
+                eventEmitter.onVideoProgress.invoke(
+                    pos,
+                    bufferedDuration,
+                    player.getDuration(),
+                    getPositionInFirstPeriodMsForCurrentWindow(pos),
+                    currentOffsetFromLive
+                );
             }
         }
     }

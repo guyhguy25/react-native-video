@@ -432,6 +432,23 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
             currentTimeSecs = duration
         }
 
+        var currentOffsetFromLive: Double? {
+            guard let currentDate = _player?.currentItem?.currentDate() else {
+                return nil
+            }
+            let timeIntervalSince = currentDate.timeIntervalSince1970
+            let unixTime = Date().timeIntervalSince1970
+            return unixTime - timeIntervalSince
+        }
+
+        var currentLiveTimestamp: Double? {
+            guard let currentDate = _player?.currentItem?.currentDate() else {
+                return nil
+            }
+            let timeIntervalSince = currentDate.timeIntervalSince1970
+            return Double(timeIntervalSince * 1000)
+        }
+
         if currentTimeSecs >= 0 {
             #if USE_GOOGLE_IMA
                 if !_didRequestAds && currentTimeSecs >= 0.0001 && _source?.adParams.adTagUrl != nil {
@@ -446,6 +463,8 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
                 "currentPlaybackTime": NSNumber(value: Double(currentPlaybackTime?.timeIntervalSince1970 ?? 0 * 1000)).int64Value,
                 "target": reactTag as Any,
                 "seekableDuration": RCTVideoUtils.calculateSeekableDuration(_player),
+                "currentOffsetFromLive": currentOffsetFromLive ?? NSNull(),
+                "currentLiveTimestamp": currentLiveTimestamp ?? NSNull(),
             ])
         }
     }
